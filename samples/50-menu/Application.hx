@@ -25,11 +25,17 @@ class Application
     {
         Gengine.setWindowSize(new IntVector2(1024, 768));
         Gengine.setWindowTitle("50-menu");
-        Gengine.setGuiFilename("gui/gui.html");
+        Gengine.setGuiFilename("gui/menu.html");
     }
 
     public static function start(engine:Engine)
     {
         engine.addSystem(new GameSystem(), 2);
+
+        var e:Entity = new Entity();
+        var staticSprite2D = new StaticSprite2D(Gengine.getResourceCache().getSprite2D('bg.jpg', true));
+        staticSprite2D.setDrawRect(new Rect(new Vector2(-512, -384), new Vector2(512, 384)));
+        e.add(staticSprite2D);
+        engine.addEntity(e);
     }
 }
