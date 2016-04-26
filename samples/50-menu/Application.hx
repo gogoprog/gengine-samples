@@ -5,13 +5,29 @@ import gengine.graphics.*;
 
 class GameSystem extends System
 {
+    private var modelEntity:Entity;
+    private var total = 0.0;
+
     public function new()
     {
         super();
     }
 
+    override public function addToEngine(engine:Engine):Void
+    {
+        modelEntity = new Entity();
+        modelEntity.add(new StaticModel());
+        modelEntity.get(StaticModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
+        modelEntity.get(StaticModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
+
+        engine.addEntity(modelEntity);
+    }
+
     override public function update(dt:Float):Void
     {
+        total += dt;
+        modelEntity.setPosition(new Vector3(Math.sin(total*10), 0, 0));
+
         if(Gengine.getInput().getScancodePress(41))
         {
             Gengine.exit();
@@ -41,7 +57,7 @@ class Application
         var cameraEntity = new Entity();
         cameraEntity.add(new Camera());
         engine.addEntity(cameraEntity);
-        cameraEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
+        cameraEntity.setPosition(new Vector3(0.0, 3.0, -3.0));
         cameraEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
 
         var viewport:Viewport = new Viewport(Gengine.getContext());
@@ -55,12 +71,5 @@ class Application
         lightEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
         lightEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
         lightEntity.get(Light).setLightType(1);
-
-        var modelEntity = new Entity();
-        modelEntity.add(new StaticModel());
-        modelEntity.get(StaticModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
-        modelEntity.get(StaticModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
-
-        engine.addEntity(modelEntity);
     }
 }
