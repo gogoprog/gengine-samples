@@ -37,5 +37,16 @@ class Application
         staticSprite2D.setDrawRect(new Rect(new Vector2(-512, -384), new Vector2(512, 384)));
         e.add(staticSprite2D);
         engine.addEntity(e);
+
+        var cameraEntity = new Entity();
+        cameraEntity.add(new Camera());
+        engine.addEntity(cameraEntity);
+
+        cameraEntity.setPosition(new Vector3(0.0, 5.0, 0.0));
+
+        var viewport:Viewport = new Viewport(Gengine.getContext());
+        viewport.setScene(Gengine.getScene());
+        viewport.setCamera(cameraEntity.get(Camera).getCamera());
+        Gengine.getRenderer().setViewport(0, viewport);
     }
 }
