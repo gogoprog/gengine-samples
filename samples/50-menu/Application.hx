@@ -41,12 +41,26 @@ class Application
         var cameraEntity = new Entity();
         cameraEntity.add(new Camera());
         engine.addEntity(cameraEntity);
-
-        cameraEntity.setPosition(new Vector3(0.0, 5.0, 0.0));
+        cameraEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
+        cameraEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
 
         var viewport:Viewport = new Viewport(Gengine.getContext());
         viewport.setScene(Gengine.getScene());
         viewport.setCamera(cameraEntity.get(Camera).getCamera());
         Gengine.getRenderer().setViewport(0, viewport);
+
+        var lightEntity = new Entity();
+        lightEntity.add(new Light());
+        engine.addEntity(lightEntity);
+        lightEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
+        lightEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
+        lightEntity.get(Light).setLightType(1);
+
+        var modelEntity = new Entity();
+        modelEntity.add(new StaticModel());
+        modelEntity.get(StaticModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
+        modelEntity.get(StaticModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
+
+        engine.addEntity(modelEntity);
     }
 }
