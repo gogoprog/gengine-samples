@@ -1,0 +1,24 @@
+{
+  "cmd": "make",
+  "name": "debug",
+  "args": [ "config=debug64", "-j8" ],
+  "sh": false,
+  "cwd": "{PROJECT_PATH}/gengine/build/",
+  "env": {
+  },
+  "errorMatch": "\n(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+)",
+  "keymap": "f7",
+  "targets": {
+      "emscripten": {
+        "cmd": "emmake",
+        "name": "emscripten-debug",
+        "args": [ "make", "config=debugemscripten64", "-j8" ],
+        "sh": false,
+        "cwd": "{PROJECT_PATH}/gengine/build/",
+        "env": {
+        },
+        "errorMatch": "\n(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+)",
+        "keymap": "f8"
+      }
+  }
+}
