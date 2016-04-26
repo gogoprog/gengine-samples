@@ -6,7 +6,6 @@ import gengine.graphics.*;
 class GameSystem extends System
 {
     private var modelEntity:Entity;
-    private var total = 0.0;
 
     public function new()
     {
@@ -19,14 +18,13 @@ class GameSystem extends System
         modelEntity.add(new StaticModel());
         modelEntity.get(StaticModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
         modelEntity.get(StaticModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
-
+        modelEntity.setPosition(new Vector3(-0.7, 0, -0.2));
         engine.addEntity(modelEntity);
     }
 
     override public function update(dt:Float):Void
     {
-        total += dt;
-        modelEntity.setPosition(new Vector3(Math.sin(total*10), 0, 0));
+        modelEntity.yaw(dt * 50);
 
         if(Gengine.getInput().getScancodePress(41))
         {
@@ -57,8 +55,8 @@ class Application
         var cameraEntity = new Entity();
         cameraEntity.add(new Camera());
         engine.addEntity(cameraEntity);
-        cameraEntity.setPosition(new Vector3(0.0, 3.0, -3.0));
-        cameraEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
+        cameraEntity.setPosition(new Vector3(0.0, 2.0, -3.0));
+        cameraEntity.lookAt(new Vector3(0, 1, 0));
 
         var viewport:Viewport = new Viewport(Gengine.getContext());
         viewport.setScene(Gengine.getScene());
