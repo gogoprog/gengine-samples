@@ -1,13 +1,6 @@
 
 body{
     background-color: transparent;
-    background-repeat: repeat, no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    -webkit-background-size: auto, cover;
-    -moz-background-size: auto, cover;
-    -o-background-size: auto, cover;
-    background-size: auto, cover;
     color: #fff;
     font-size: 13px;
     width:100%;
@@ -74,4 +67,42 @@ a{
     -o-transform: translateX(-50px) skew(0deg);
     -ms-transform: translateX(-50px) skew(0deg);
     transform: translateX(-50px) skew(0deg);
+}
+
+.logo {
+    display: block;
+    position:absolute;
+    width:500px;
+    height:130px;
+    right:100px;
+    top:100px;
+    font-size:150px;
+    font-weight: bold;
+    text-align:center;
+    transform-origin: center;
+    -webkit-transform-origin: center;
+    -webkit-animation: logo linear 10s infinite;
+    animation: logo linear 10s infinite;
+    color:green;
+}
+
+@-webkit-keyframes logo{
+    0% {
+        text-shadow: 0 0 0px rgba(255,255,255,1);
+    }
+
+    30% {
+        text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #000000 , 0 0 70px #000000 , 0 0 80px #000000 , 0 0 100px #000000 ;
+    }
+
+    50% {
+        text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #00de00 , 0 0 70px #00de00 , 0 0 80px #00de00 , 0 0 100px #00de00 ;
+    }
+
+    70% {
+        text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #000000 , 0 0 70px #000000 , 0 0 80px #000000 , 0 0 100px #000000 ;
+    }
+    100% {
+        text-shadow: 0 0 0px rgba(255,255,255,1);
+    }
 }

@@ -46,12 +46,6 @@ class Application
     {
         engine.addSystem(new GameSystem(), 2);
 
-        var e:Entity = new Entity();
-        var staticSprite2D = new StaticSprite2D(Gengine.getResourceCache().getSprite2D('bg.jpg', true));
-        staticSprite2D.setDrawRect(new Rect(new Vector2(-512, -384), new Vector2(512, 384)));
-        e.add(staticSprite2D);
-        //engine.addEntity(e);
-
         var cameraEntity = new Entity();
         cameraEntity.add(new Camera());
         engine.addEntity(cameraEntity);
