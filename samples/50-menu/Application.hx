@@ -15,16 +15,25 @@ class GameSystem extends System
     override public function addToEngine(engine:Engine):Void
     {
         modelEntity = new Entity();
-        modelEntity.add(new StaticModel());
-        modelEntity.get(StaticModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
-        modelEntity.get(StaticModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
+        modelEntity.add(new AnimatedModel());
+        modelEntity.get(AnimatedModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
+        modelEntity.get(AnimatedModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
         modelEntity.setPosition(new Vector3(-0.7, 0, -0.2));
         engine.addEntity(modelEntity);
+
+        var animation = Gengine.getResourceCache().getAnimation('Ninja_Idle1.ani', true);
+        var state = modelEntity.get(AnimatedModel).addAnimationState(animation);
+        state.setWeight(1.0);
+        state.setLooped(true);
+        state.setTime(0);
     }
 
     override public function update(dt:Float):Void
     {
-        modelEntity.yaw(dt * 50);
+        modelEntity.yaw(dt * 20);
+
+        var state = modelEntity.get(AnimatedModel).getAnimationStateByIndex(0);
+        state.addTime(dt);
 
         if(Gengine.getInput().getScancodePress(41))
         {
