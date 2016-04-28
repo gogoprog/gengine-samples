@@ -22,7 +22,7 @@ class GameSystem extends System
         engine.addEntity(modelEntity);
 
         var animation = Gengine.getResourceCache().getAnimation('Ninja_Idle1.ani', true);
-        var state = modelEntity.get(AnimatedModel).addAnimationState(animation);
+        var state:AnimationState = modelEntity.get(AnimatedModel).addAnimationState(animation);
         state.setWeight(1.0);
         state.setLooped(true);
         state.setTime(0);
@@ -32,7 +32,7 @@ class GameSystem extends System
     {
         modelEntity.yaw(dt * 20);
 
-        var state = modelEntity.get(AnimatedModel).getAnimationStateByIndex(0);
+        var state:AnimationState = modelEntity.get(AnimatedModel).getAnimationStateByIndex(0);
         state.addTime(dt);
 
         if(Gengine.getInput().getScancodePress(41))
