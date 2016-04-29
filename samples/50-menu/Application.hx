@@ -63,7 +63,7 @@ class Application
 
         var viewport:Viewport = new Viewport(Gengine.getContext());
         viewport.setScene(Gengine.getScene());
-        viewport.setCamera(cameraEntity.get(Camera).getCamera());
+        viewport.setCamera(cameraEntity.get(Camera));
         Gengine.getRenderer().setViewport(0, viewport);
 
         var lightEntity = new Entity();
