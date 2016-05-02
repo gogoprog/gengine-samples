@@ -1,0 +1,5 @@
+-cp ../../gengine/deps/common/Ash-Haxe/src/
+-cp ../../gengine/src/haxe/
+-cp ..
+-main gengine.Main
+-js ./generated/main.js
