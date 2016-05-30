@@ -30,16 +30,21 @@ class Application
     {
         engine.addSystem(new ExitSystem(), 0);
 
+        var sceneEntity = Gengine.getScene().getAsEntity();
+        sceneEntity.add(new PhysicsWorld2D());
+        sceneEntity.get(PhysicsWorld2D).setGravity(new Vector2(0, -1000));
+
         var e = new Entity();
         e.add(new StaticSprite2D());
         var staticSprite2D:StaticSprite2D = e.get(StaticSprite2D);
         staticSprite2D.setSprite(Gengine.getResourceCache().getSprite2D("logo.png", true));
+        e.add(new RigidBody2D());
+        e.get(RigidBody2D).setBodyType(2);
+        e.add(new CollisionCircle2D());
+        e.get(CollisionCircle2D).setRadius(32);
+        e.get(CollisionCircle2D).setFriction(0.5);
         engine.addEntity(e);
 
         Gengine.getRenderer().getDefaultZone().setFogColor(new Color(0.5, 0.5, 0.5, 1));
-
-        var sceneEntity = Gengine.getScene().getAsEntity();
-        sceneEntity.add(new PhysicsWorld2D());
-        sceneEntity.get(PhysicsWorld2D).setGravity(new Vector2(0, -1000));
     }
 }
