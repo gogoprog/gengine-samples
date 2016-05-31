@@ -43,6 +43,14 @@ class Application
         e.add(new CollisionCircle2D());
         e.get(CollisionCircle2D).setRadius(32);
         e.get(CollisionCircle2D).setFriction(0.5);
+        e.position = new Vector3(0, 300, 0);
+        engine.addEntity(e);
+
+        var e = new Entity();
+        e.add(new RigidBody2D());
+        e.add(new CollisionBox2D());
+        e.get(CollisionBox2D).setSize(new Vector2(600, 64));
+        e.position = new Vector3(0, -300, 0);
         engine.addEntity(e);
 
         Gengine.getRenderer().getDefaultZone().setFogColor(new Color(0.5, 0.5, 0.5, 1));
