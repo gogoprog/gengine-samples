@@ -41,7 +41,7 @@ class Application
         e.add(new RigidBody2D());
         e.get(RigidBody2D).setBodyType(2);
         e.add(new CollisionCircle2D());
-        e.get(CollisionCircle2D).setRadius(32);
+        e.get(CollisionCircle2D).setRadius(128);
         e.get(CollisionCircle2D).setFriction(0.5);
         e.position = new Vector3(0, 300, 0);
         engine.addEntity(e);
