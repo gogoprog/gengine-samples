@@ -32,7 +32,7 @@ class Application
 
         var sceneEntity = Gengine.getScene().getAsEntity();
         sceneEntity.add(new PhysicsWorld2D());
-        sceneEntity.get(PhysicsWorld2D).setGravity(new Vector2(0, -1000));
+        sceneEntity.get(PhysicsWorld2D).setGravity(new Vector2(0, -10000000000));
 
         var e = new Entity();
         e.add(new StaticSprite2D());
@@ -40,9 +40,10 @@ class Application
         staticSprite2D.setSprite(Gengine.getResourceCache().getSprite2D("logo.png", true));
         e.add(new RigidBody2D());
         e.get(RigidBody2D).setBodyType(2);
+        e.get(RigidBody2D).setMass(200);
         e.add(new CollisionCircle2D());
         e.get(CollisionCircle2D).setRadius(128);
-        e.get(CollisionCircle2D).setFriction(0.5);
+        e.get(CollisionCircle2D).setFriction(0);
         e.position = new Vector3(0, 300, 0);
         engine.addEntity(e);
 
