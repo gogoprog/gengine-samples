@@ -27,6 +27,9 @@ class FactorySystem extends System
         e.get(RigidBody2D).setBodyType(2);
         e.add(new CollisionBox2D());
         e.get(CollisionBox2D).setSize(new Vector2(size, size));
+        e.get(CollisionBox2D).setDensity(1);
+        e.get(CollisionBox2D).setFriction(0.5);
+        e.get(CollisionBox2D).setRestitution(0.1);
         e.position = position;
         engine.addEntity(e);
     }
@@ -88,8 +91,9 @@ class Application
 
         var sceneEntity = Gengine.getScene().getAsEntity();
         sceneEntity.add(new PhysicsWorld2D());
-        sceneEntity.get(PhysicsWorld2D).setGravity(new Vector2(0, -10000000000));
-
+        sceneEntity.get(PhysicsWorld2D).setGravity(new Vector2(0, -100));
+        sceneEntity.get(PhysicsWorld2D).setSubStepping(false);
+        sceneEntity.get(PhysicsWorld2D).setContinuousPhysics(false);
 
         var e = new Entity();
         e.add(new RigidBody2D());
