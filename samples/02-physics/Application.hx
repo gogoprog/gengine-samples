@@ -1,6 +1,7 @@
 import gengine.*;
 import gengine.math.*;
 import gengine.components.*;
+import gengine.physics.*;
 
 class FactorySystem extends System
 {
@@ -108,5 +109,10 @@ class Application
         Gengine.getRenderer().getDefaultZone().setFogColor(new Color(0.5, 0.5, 0.5, 1));
 
         engine.getSystem(FactorySystem).spawnCrate(64, new Vector3(0, 300, 0));
+
+        var result = new PhysicsRaycastResult2D();
+        sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(0,0), new Vector2(0, -2000));
+
+        trace(result.distance);
     }
 }
