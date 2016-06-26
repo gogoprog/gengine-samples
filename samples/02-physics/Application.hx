@@ -41,6 +41,8 @@ class InputSystem extends System
     private var engine:Engine;
     private var camera:Camera;
 
+    public var sceneEntity:Entity;
+
     public function new(_camera:Camera)
     {
         super();
@@ -65,7 +67,12 @@ class InputSystem extends System
 
         if(input.getMouseButtonPress(1))
         {
-            var mouseWorldPosition = camera.screenToWorldPoint(new Vector3(mousePosition.x / 800, mousePosition.y / 600, 0));
+            var mouseWorldPosition2d = new Vector2(mousePosition.x / 800, mousePosition.y / 600);
+            var result = new PhysicsRaycastResult2D();
+            sceneEntity.get(PhysicsWorld2D).raycastSingle(result, mouseWorldPosition2d, new Vector2(mouseWorldPosition2d.x, mouseWorldPosition2d.y - 2000));
+            trace('Distance to ground : ' + result.distance);
+
+            var mouseWorldPosition = camera.screenToWorldPoint(new Vector3(mouseWorldPosition2d.x, mouseWorldPosition2d.y, 0));
             engine.getSystem(FactorySystem).spawnCrate(64, mouseWorldPosition);
         }
     }
@@ -96,6 +103,8 @@ class Application
         sceneEntity.get(PhysicsWorld2D).setSubStepping(false);
         sceneEntity.get(PhysicsWorld2D).setContinuousPhysics(false);
 
+        engine.getSystem(InputSystem).sceneEntity = sceneEntity;
+
         var e = new Entity();
         e.add(new RigidBody2D());
         e.add(new CollisionBox2D());
@@ -113,6 +122,5 @@ class Application
         var result = new PhysicsRaycastResult2D();
         sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(0,0), new Vector2(0, -2000));
 
-        trace(result.distance);
     }
 }
