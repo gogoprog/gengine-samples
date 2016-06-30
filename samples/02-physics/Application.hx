@@ -57,23 +57,25 @@ class InputSystem extends System
     override public function update(dt:Float):Void
     {
         var input = Gengine.getInput();
+        var mousePosition = input.getMousePosition();
+        var mouseScreenPosition = new Vector2(mousePosition.x / 800, mousePosition.y / 600);
+        var mouseWorldPosition = camera.screenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, 0));
 
         if(input.getScancodePress(41))
         {
             Gengine.exit();
         }
 
-        var mousePosition = input.getMousePosition();
-
         if(input.getMouseButtonPress(1))
         {
-            var mouseWorldPosition2d = new Vector2(mousePosition.x / 800, mousePosition.y / 600);
-            var result = new PhysicsRaycastResult2D();
-            sceneEntity.get(PhysicsWorld2D).raycastSingle(result, mouseWorldPosition2d, new Vector2(mouseWorldPosition2d.x, mouseWorldPosition2d.y - 2000));
-            trace('Distance to ground : ' + result.distance);
-
-            var mouseWorldPosition = camera.screenToWorldPoint(new Vector3(mouseWorldPosition2d.x, mouseWorldPosition2d.y, 0));
             engine.getSystem(FactorySystem).spawnCrate(64, mouseWorldPosition);
+        }
+
+        if(input.getMouseButtonPress(1 << 2))
+        {
+            var result = new PhysicsRaycastResult2D();
+            sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(mouseWorldPosition.x, mouseWorldPosition.y), new Vector2(mouseWorldPosition.x, mouseWorldPosition.y - 20000));
+            trace('Distance below cursor to obstacle : ' + result.distance);
         }
     }
 }
