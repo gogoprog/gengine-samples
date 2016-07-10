@@ -9,6 +9,17 @@
   "errorMatch": "\n(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+)",
   "keymap": "f7",
   "targets": {
+      "release": {
+        "cmd": "make",
+        "name": "release",
+        "args": [ "config=release64", "-j8" ],
+        "sh": false,
+        "cwd": "{PROJECT_PATH}/gengine/build/",
+        "env": {
+        },
+        "errorMatch": "\n(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+)",
+        "keymap": "f8"
+        },
       "emscripten": {
         "cmd": "emmake",
         "name": "emscripten-debug",
@@ -18,7 +29,7 @@
         "env": {
         },
         "errorMatch": "\n(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+)",
-        "keymap": "f8"
+        "keymap": "f9"
       }
   }
 }
