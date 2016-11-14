@@ -1,3 +1,7 @@
 *.log
 generated
 packed-*
+/samples/*/index.data
+/samples/*/index.html
+/samples/*/index.html.mem
+/samples/*/index.js
