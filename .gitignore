@@ -5,3 +5,4 @@ packed-*
 /samples/*/index.html
 /samples/*/index.html.mem
 /samples/*/index.js
+!packed-html5
