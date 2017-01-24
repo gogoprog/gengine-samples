@@ -1,0 +1,19 @@
+body {
+    font-family: 'Vollkorn', serif;
+    color: #46433A;
+    background-color: #F1EED9;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+    color: #CE534D;
+    text-decoration: none;
+    display:inline-block;
+    margin-left:15px;
+}
+
+a:hover {
+    text-decoration: underline;
+}

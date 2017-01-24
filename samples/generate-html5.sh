@@ -2,7 +2,14 @@
 
 echo "[gengine-samples] Running all samples ..."
 
-HTML="<html><body>"
+HTML="<html>
+<head>
+<title>gengine-samples</title>
+<link rel='stylesheet' type='text/css' href='style.css'>
+</head>
+<body>
+<h1>gengine web samples</h1>
+"
 
 for dir in `ls`;
 do
