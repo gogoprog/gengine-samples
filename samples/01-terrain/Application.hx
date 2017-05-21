@@ -6,6 +6,7 @@ import gengine.graphics.*;
 class GameSystem extends System
 {
     private var terrainEntity:Entity;
+    private var cameraEntity:Entity;
 
     public function new()
     {
@@ -18,18 +19,33 @@ class GameSystem extends System
         terrainEntity.add(new Terrain());
 
         terrainEntity.get(Terrain).setPatchSize(64);
-        terrainEntity.get(Terrain).setSpacing(new Vector3(2.0, 0.5, 2.0));
+        terrainEntity.get(Terrain).setSpacing(new Vector3(1.0, 0.5, 1.0));
         terrainEntity.get(Terrain).setSmoothing(true);
         terrainEntity.get(Terrain).setHeightMap(Gengine.getResourceCache().getImage('HeightMap.png', true));
         terrainEntity.get(Terrain).setMaterial(Gengine.getResourceCache().getMaterial('Terrain.xml', true));
         terrainEntity.setPosition(new Vector3(-0.7, 0, -0.2));
 
         engine.addEntity(terrainEntity);
+
+        cameraEntity = new Entity();
+        cameraEntity.add(new Camera());
+        engine.addEntity(cameraEntity);
+        cameraEntity.setPosition(new Vector3(0.0, 30.0, -30.0));
+        cameraEntity.lookAt(new Vector3(0, terrainEntity.get(Terrain).getHeight(new Vector3(0, 0, 0)) + 15.0, 0));
+
+        var viewport:Viewport = new Viewport(Gengine.getContext());
+        viewport.setScene(Gengine.getScene());
+        viewport.setCamera(cameraEntity.get(Camera));
+        Gengine.getRenderer().setViewport(0, viewport);
     }
 
     override public function update(dt:Float):Void
     {
         terrainEntity.yaw(dt * 20);
+
+        var position = cameraEntity.position;
+        position.y = terrainEntity.get(Terrain).getHeight(position) + 15.0;
+        cameraEntity.position = position;
 
         if(Gengine.getInput().getScancodePress(41))
         {
@@ -50,24 +66,6 @@ class Application
     {
         engine.addSystem(new GameSystem(), 2);
 
-        var cameraEntity = new Entity();
-        cameraEntity.add(new Camera());
-        engine.addEntity(cameraEntity);
-        cameraEntity.setPosition(new Vector3(0.0, 15.0, -30.0));
-        cameraEntity.lookAt(new Vector3(0, 1, 0));
-
-        var viewport:Viewport = new Viewport(Gengine.getContext());
-        viewport.setScene(Gengine.getScene());
-        viewport.setCamera(cameraEntity.get(Camera));
-        Gengine.getRenderer().setViewport(0, viewport);
-
-        var lightEntity = new Entity();
-        lightEntity.add(new Light());
-        engine.addEntity(lightEntity);
-        lightEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
-        lightEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
-        lightEntity.get(Light).setLightType(1);
-
-        Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.75,0.75,0.75,1));
+        Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.65, 0.65, 0.65, 1));
     }
 }
