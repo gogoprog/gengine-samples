@@ -67,5 +67,7 @@ class Application
         lightEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
         lightEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
         lightEntity.get(Light).setLightType(1);
+
+        Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.75,0.75,0.75,1));
     }
 }
