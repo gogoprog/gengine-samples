@@ -7,6 +7,7 @@ class GameSystem extends System
 {
     private var terrainEntity:Entity;
     private var cameraEntity:Entity;
+    private var angle:Float = 0.0;
 
     public function new()
     {
@@ -21,6 +22,7 @@ class GameSystem extends System
         terrainEntity.get(Terrain).setPatchSize(64);
         terrainEntity.get(Terrain).setSpacing(new Vector3(1.0, 0.5, 1.0));
         terrainEntity.get(Terrain).setSmoothing(true);
+        terrainEntity.get(Terrain).setCastShadows(true);
         terrainEntity.get(Terrain).setHeightMap(Gengine.getResourceCache().getImage('HeightMap.png', true));
         terrainEntity.get(Terrain).setMaterial(Gengine.getResourceCache().getMaterial('Terrain.xml', true));
         terrainEntity.setPosition(new Vector3(-0.7, 0, -0.2));
@@ -37,15 +39,30 @@ class GameSystem extends System
         viewport.setScene(Gengine.getScene());
         viewport.setCamera(cameraEntity.get(Camera));
         Gengine.getRenderer().setViewport(0, viewport);
+
+        var lightEntity = new Entity();
+        var light = new Light();
+        light.setLightType(0);
+        light.setCastShadows(true);
+        light.setColor(new Color(0.7, 0.7, 0.7, 1));
+
+        lightEntity.add(light);
+        lightEntity.setDirection(new Vector3(0.6, -1.0, 0.8));
+
+        engine.addEntity(lightEntity);
     }
 
     override public function update(dt:Float):Void
     {
-        terrainEntity.yaw(dt * 20);
+        angle += dt * 0.5;
 
         var position = cameraEntity.position;
+        position.x = 100 * Math.cos(angle);
+        position.z = 100 * Math.sin(angle);
         position.y = terrainEntity.get(Terrain).getHeight(position) + 15.0;
         cameraEntity.position = position;
+
+        cameraEntity.lookAt(new Vector3(0, 15.0, 0));
 
         if(Gengine.getInput().getScancodePress(41))
         {
@@ -66,6 +83,6 @@ class Application
     {
         engine.addSystem(new GameSystem(), 2);
 
-        Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.65, 0.65, 0.65, 1));
+        Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.15, 0.15, 0.15, 1));
     }
 }
