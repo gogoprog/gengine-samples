@@ -75,6 +75,18 @@ GameSystem.prototype = $extend(ash_core_System.prototype,{
 		var this7 = Module.Vector3(0.6,-1.0,0.8);
 		lightEntity.node.setDirection(this7);
 		engine.addEntity(lightEntity);
+		var skyEntity = new gengine_Entity();
+		var this8 = Module.Vector3(100,100,100);
+		var scale = this8;
+		skyEntity.node.setScale(scale);
+		skyEntity.add(new gengine_components_Skybox());
+		var tmp7 = skyEntity.get(gengine_components_Skybox);
+		var tmp8 = gengine.getResourceCache().getModel("Box.mdl",true);
+		tmp7.setModel(tmp8);
+		var tmp9 = skyEntity.get(gengine_components_Skybox);
+		var tmp10 = gengine.getResourceCache().getMaterial("Skybox.xml",true);
+		tmp9.setMaterial(tmp10);
+		engine.addEntity(skyEntity);
 	}
 	,update: function(dt) {
 		this.angle += dt * 0.5;
@@ -84,7 +96,7 @@ GameSystem.prototype = $extend(ash_core_System.prototype,{
 		position.y = this.terrainEntity.get(gengine_components_Terrain).getHeight(position) + 15.0;
 		this.cameraEntity.set_position(position);
 		var _this = this.cameraEntity;
-		var this1 = Module.Vector3(0,15.0,0);
+		var this1 = Module.Vector3(0,50.0,0);
 		var upVector = null;
 		if(upVector == null) {
 			var this2 = Module.Vector3(0,1,0);
@@ -1684,6 +1696,22 @@ gengine_components_RigidBody2D.prototype = $extend(gengine_components_UrhoCompon
 		this.object.applyAngularImpulse(impulse,wake);
 	}
 	,__class__: gengine_components_RigidBody2D
+});
+var gengine_components_Skybox = function() {
+	gengine_components_UrhoComponent.call(this);
+	this.object = new Module.Skybox(gengine.getContext());
+	window.dummyNode.addComponent(this.object, 0, 0);
+};
+gengine_components_Skybox.__name__ = ["gengine","components","Skybox"];
+gengine_components_Skybox.__super__ = gengine_components_UrhoComponent;
+gengine_components_Skybox.prototype = $extend(gengine_components_UrhoComponent.prototype,{
+	setModel: function(model) {
+		this.object.setModel(model);
+	}
+	,setMaterial: function(material) {
+		this.object.setMaterial(material);
+	}
+	,__class__: gengine_components_Skybox
 });
 var gengine_components_Terrain = function() {
 	gengine_components_UrhoComponent.call(this);
