@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+
+        $(function () {
+            var wHeight = $(window).height();
+
+            var pre = $("pre");
+
+            pre
+                .dialog({
+                    width: '50%',
+                    height: wHeight * 0.6,
+                    position: { my: "right bottom", at: "right bottom", of: window },
+                    title: "Source: Application.hx"
+                })
+                .parent()
+                .draggable({
+                    cancel: '',
+                    containment: false
+                });
+
+            pre.on(
+                "dialogclose",
+                function () {
+                    $("#viewSource").show();
+                });
+
+            $("#content").load("index.html");
+
+            $("button").button();
+
+            $("#viewSource").click(function (event) {
+                pre.dialog("open");
+                $("#viewSource").hide();
+            });
+
+            $("#viewSource").hide();
+        });
+    </script>
+</head>
+
+<body>
+    <pre>
+        <code class="haxe">
+import gengine.*;
+import gengine.math.*;
+
+class ExitSystem extends System
+{
+    public function new()
+    {
+        super();
+    }
+
+    override public function update(dt:Float):Void
+    {
+        if(Gengine.getInput().getScancodePress(41))
+        {
+            Gengine.exit();
+        }
+    }
+}
+
+class Application
+{
+    public static function init()
+    {
+        Gengine.setWindowSize(new IntVector2(320, 200));
+        Gengine.setWindowTitle(&quot;00-empty&quot;);
+    }
+
+    public static function start(engine:Engine)
+    {
+        engine.addSystem(new ExitSystem(), 0);
+        trace(&quot;Empty application started.&quot;);
+    }
+}
+
+        </code>
+    </pre>
+    <div id="content"></div>
+    <button id="viewSource">View sources</div>
+</body>
+
+</html>

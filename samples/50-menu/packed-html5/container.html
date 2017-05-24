@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+
+        $(function () {
+            var wHeight = $(window).height();
+
+            var pre = $("pre");
+
+            pre
+                .dialog({
+                    width: '50%',
+                    height: wHeight * 0.6,
+                    position: { my: "right bottom", at: "right bottom", of: window },
+                    title: "Source: Application.hx"
+                })
+                .parent()
+                .draggable({
+                    cancel: '',
+                    containment: false
+                });
+
+            pre.on(
+                "dialogclose",
+                function () {
+                    $("#viewSource").show();
+                });
+
+            $("#content").load("index.html");
+
+            $("button").button();
+
+            $("#viewSource").click(function (event) {
+                pre.dialog("open");
+                $("#viewSource").hide();
+            });
+
+            $("#viewSource").hide();
+        });
+    </script>
+</head>
+
+<body>
+    <pre>
+        <code class="haxe">
+import gengine.*;
+import gengine.components.*;
+import gengine.math.*;
+import gengine.graphics.*;
+
+class GameSystem extends System
+{
+    private var modelEntity:Entity;
+
+    public function new()
+    {
+        super();
+    }
+
+    override public function addToEngine(engine:Engine):Void
+    {
+        modelEntity = new Entity();
+        modelEntity.add(new AnimatedModel());
+        modelEntity.get(AnimatedModel).setModel(Gengine.getResourceCache().getModel(&#x27;Ninja.mdl&#x27;, true));
+        modelEntity.get(AnimatedModel).setMaterial(Gengine.getResourceCache().getMaterial(&#x27;Ninja.xml&#x27;, true));
+        modelEntity.setPosition(new Vector3(-0.7, 0, -0.2));
+        engine.addEntity(modelEntity);
+
+        var animation = Gengine.getResourceCache().getAnimation(&#x27;Ninja_Idle1.ani&#x27;, true);
+        var state:AnimationState = modelEntity.get(AnimatedModel).addAnimationState(animation);
+        state.setWeight(1.0);
+        state.setLooped(true);
+        state.setTime(0);
+    }
+
+    override public function update(dt:Float):Void
+    {
+        modelEntity.yaw(dt * 20);
+
+        var state:AnimationState = modelEntity.get(AnimatedModel).getAnimationStateByIndex(0);
+        state.addTime(dt);
+
+        if(Gengine.getInput().getScancodePress(41))
+        {
+            Gengine.exit();
+        }
+    }
+}
+
+class Application
+{
+    public static function init()
+    {
+        Gengine.setWindowSize(new IntVector2(1024, 768));
+        Gengine.setWindowTitle(&quot;50-menu&quot;);
+        Gengine.setGuiFilename(&quot;gui/menu.html&quot;);
+    }
+
+    public static function start(engine:Engine)
+    {
+        engine.addSystem(new GameSystem(), 2);
+
+        var cameraEntity = new Entity();
+        cameraEntity.add(new Camera());
+        engine.addEntity(cameraEntity);
+        cameraEntity.setPosition(new Vector3(0.0, 2.0, -3.0));
+        cameraEntity.lookAt(new Vector3(0, 1, 0));
+
+        var viewport:Viewport = new Viewport(Gengine.getContext());
+        viewport.setScene(Gengine.getScene());
+        viewport.setCamera(cameraEntity.get(Camera));
+        Gengine.getRenderer().setViewport(0, viewport);
+
+        var lightEntity = new Entity();
+        lightEntity.add(new Light());
+        engine.addEntity(lightEntity);
+        lightEntity.setPosition(new Vector3(0.0, 5.0, -5.0));
+        lightEntity.setDirection(new Vector3(0.0, -1.0, 1.0));
+        lightEntity.get(Light).setLightType(1);
+    }
+}
+
+        </code>
+    </pre>
+    <div id="content"></div>
+    <button id="viewSource">View sources</div>
+</body>
+
+</html>

@@ -19,7 +19,20 @@ do
     gengine-pack --html5 $1
     cd ..
 
-    HTML="${HTML}<a href='./samples/${dir}/packed-html5/'>${dir}</a><br/>"
+    HTML="${HTML}<a href='./samples/${dir}/packed-html5/container.html'>${dir}</a><br/>"
+
+    python << EOF
+import pystache
+from pathlib import Path
+
+template = Path('container-template.html').read_text()
+source = Path('${dir}/Application.hx').read_text()
+
+
+with open('${dir}/packed-html5/container.html', 'w') as output_file:
+    output_file.write(pystache.render(template, {'source': source}))
+EOF
+
 done
 
 HTML="${HTML}</body></html>"

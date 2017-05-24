@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+
+        $(function () {
+            var wHeight = $(window).height();
+
+            var pre = $("pre");
+
+            pre
+                .dialog({
+                    width: '50%',
+                    height: wHeight * 0.6,
+                    position: { my: "right bottom", at: "right bottom", of: window },
+                    title: "Source: Application.hx"
+                })
+                .parent()
+                .draggable({
+                    cancel: '',
+                    containment: false
+                });
+
+            pre.on(
+                "dialogclose",
+                function () {
+                    $("#viewSource").show();
+                });
+
+            $("#content").load("index.html");
+
+            $("button").button();
+
+            $("#viewSource").click(function (event) {
+                pre.dialog("open");
+                $("#viewSource").hide();
+            });
+
+            $("#viewSource").hide();
+        });
+    </script>
+</head>
+
+<body>
+    <pre>
+        <code class="haxe">
+import gengine.*;
+import gengine.components.*;
+import gengine.math.*;
+import gengine.graphics.*;
+
+class GameSystem extends System
+{
+    private var terrainEntity:Entity;
+    private var cameraEntity:Entity;
+    private var angle:Float = 0.0;
+
+    public function new()
+    {
+        super();
+    }
+
+    override public function addToEngine(engine:Engine):Void
+    {
+        terrainEntity = new Entity();
+        terrainEntity.add(new Terrain());
+
+        terrainEntity.get(Terrain).setPatchSize(64);
+        terrainEntity.get(Terrain).setSpacing(new Vector3(1.0, 0.5, 1.0));
+        terrainEntity.get(Terrain).setSmoothing(true);
+        terrainEntity.get(Terrain).setCastShadows(true);
+        terrainEntity.get(Terrain).setHeightMap(Gengine.getResourceCache().getImage(&#x27;HeightMap.png&#x27;, true));
+        terrainEntity.get(Terrain).setMaterial(Gengine.getResourceCache().getMaterial(&#x27;Terrain.xml&#x27;, true));
+        terrainEntity.setPosition(new Vector3(-0.7, 0, -0.2));
+
+        engine.addEntity(terrainEntity);
+
+        cameraEntity = new Entity();
+        cameraEntity.add(new Camera());
+        engine.addEntity(cameraEntity);
+        cameraEntity.setPosition(new Vector3(0.0, 30.0, -30.0));
+        cameraEntity.lookAt(new Vector3(0, terrainEntity.get(Terrain).getHeight(new Vector3(0, 0, 0)) + 15.0, 0));
+
+        var viewport:Viewport = new Viewport(Gengine.getContext());
+        viewport.setScene(Gengine.getScene());
+        viewport.setCamera(cameraEntity.get(Camera));
+        Gengine.getRenderer().setViewport(0, viewport);
+
+        var lightEntity = new Entity();
+        var light = new Light();
+        light.setLightType(0);
+        light.setCastShadows(true);
+        light.setColor(new Color(0.7, 0.7, 0.7, 1));
+
+        lightEntity.add(light);
+        lightEntity.setDirection(new Vector3(0.6, -1.0, 0.8));
+
+        engine.addEntity(lightEntity);
+    }
+
+    override public function update(dt:Float):Void
+    {
+        angle += dt * 0.5;
+
+        var position = cameraEntity.position;
+        position.x = 100 * Math.cos(angle);
+        position.z = 100 * Math.sin(angle);
+        position.y = terrainEntity.get(Terrain).getHeight(position) + 15.0;
+        cameraEntity.position = position;
+
+        cameraEntity.lookAt(new Vector3(0, 15.0, 0));
+
+        if(Gengine.getInput().getScancodePress(41))
+        {
+            Gengine.exit();
+        }
+    }
+}
+
+class Application
+{
+    public static function init()
+    {
+        Gengine.setWindowSize(new IntVector2(1024, 768));
+        Gengine.setWindowTitle(&quot;01-terrain&quot;);
+    }
+
+    public static function start(engine:Engine)
+    {
+        engine.addSystem(new GameSystem(), 2);
+
+        Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.15, 0.15, 0.15, 1));
+    }
+}
+
+        </code>
+    </pre>
+    <div id="content"></div>
+    <button id="viewSource">View sources</div>
+</body>
+
+</html>
