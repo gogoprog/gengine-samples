@@ -50,6 +50,13 @@ class GameSystem extends System
         lightEntity.setDirection(new Vector3(0.6, -1.0, 0.8));
 
         engine.addEntity(lightEntity);
+
+        var skyEntity = new Entity();
+        skyEntity.setScale(new Vector3(100,100,100));
+        skyEntity.add(new Skybox());
+        skyEntity.get(Skybox).setModel(Gengine.getResourceCache().getModel('Box.mdl', true));
+        skyEntity.get(Skybox).setMaterial(Gengine.getResourceCache().getMaterial('Skybox.xml', true));
+        engine.addEntity(skyEntity);
     }
 
     override public function update(dt:Float):Void
@@ -62,7 +69,7 @@ class GameSystem extends System
         position.y = terrainEntity.get(Terrain).getHeight(position) + 15.0;
         cameraEntity.position = position;
 
-        cameraEntity.lookAt(new Vector3(0, 15.0, 0));
+        cameraEntity.lookAt(new Vector3(0, 50.0, 0));
 
         if(Gengine.getInput().getScancodePress(41))
         {
