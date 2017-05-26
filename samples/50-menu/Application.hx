@@ -16,8 +16,8 @@ class GameSystem extends System
     {
         modelEntity = new Entity();
         modelEntity.add(new AnimatedModel());
-        modelEntity.get(AnimatedModel).setModel(Gengine.getResourceCache().getModel('Ninja.mdl', true));
-        modelEntity.get(AnimatedModel).setMaterial(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
+        modelEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel('Ninja.mdl', true), true);
+        modelEntity.get(AnimatedModel).setMaterial1(Gengine.getResourceCache().getMaterial('Ninja.xml', true));
         modelEntity.setPosition(new Vector3(-0.7, 0, -0.2));
         engine.addEntity(modelEntity);
 
@@ -32,7 +32,7 @@ class GameSystem extends System
     {
         modelEntity.yaw(dt * 20);
 
-        var state:AnimationState = modelEntity.get(AnimatedModel).getAnimationStateByIndex(0);
+        var state:AnimationState = modelEntity.get(AnimatedModel).getAnimationState(0);
         state.addTime(dt);
 
         if(Gengine.getInput().getScancodePress(41))

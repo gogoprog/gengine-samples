@@ -7,3 +7,4 @@ packed-*
 /samples/*/index.js
 !packed-html5
 !/samples/*/packed-html5/generated/
+tags

@@ -27,7 +27,7 @@ class FactorySystem extends System
         e.add(new RigidBody2D());
         e.get(RigidBody2D).setBodyType(2);
         e.add(new CollisionBox2D());
-        e.get(CollisionBox2D).setSize(new Vector2(size, size));
+        e.get(CollisionBox2D).setSize1(new Vector2(size, size));
         e.get(CollisionBox2D).setDensity(1);
         e.get(CollisionBox2D).setFriction(0.5);
         e.get(CollisionBox2D).setRestitution(0.1);
@@ -74,7 +74,7 @@ class InputSystem extends System
         if(input.getMouseButtonPress(1 << 2))
         {
             var result = new PhysicsRaycastResult2D();
-            sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(mouseWorldPosition.x, mouseWorldPosition.y), new Vector2(mouseWorldPosition.x, mouseWorldPosition.y - 20000));
+            sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(mouseWorldPosition.x, mouseWorldPosition.y), new Vector2(mouseWorldPosition.x, mouseWorldPosition.y - 20000), 4294967295);
             trace('Distance below cursor to obstacle : ' + result.distance);
         }
     }
@@ -110,7 +110,7 @@ class Application
         var e = new Entity();
         e.add(new RigidBody2D());
         e.add(new CollisionBox2D());
-        e.get(CollisionBox2D).setSize(new Vector2(512, 512));
+        e.get(CollisionBox2D).setSize1(new Vector2(512, 512));
         e.add(new StaticSprite2D());
         e.get(StaticSprite2D).setSprite(Gengine.getResourceCache().getSprite2D("crate.png", true));
         e.get(StaticSprite2D).setDrawRect(new Rect(new Vector2(-256, -256), new Vector2(256, 256)));
@@ -122,7 +122,7 @@ class Application
         engine.getSystem(FactorySystem).spawnCrate(64, new Vector3(0, 300, 0));
 
         var result = new PhysicsRaycastResult2D();
-        sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(0,0), new Vector2(0, -2000));
+        sceneEntity.get(PhysicsWorld2D).raycastSingle(result, new Vector2(0,0), new Vector2(0, -2000), 4294967295);
 
     }
 }

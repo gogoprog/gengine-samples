@@ -35,7 +35,7 @@ class Application
         var animatedSprite2D:AnimatedSprite2D = e.get(AnimatedSprite2D);
         var animationSet = Gengine.getResourceCache().getAnimationSet2D("spriter/player.scml", true);
         animatedSprite2D.setAnimationSet(animationSet);
-        animatedSprite2D.setAnimation("walk");
+        animatedSprite2D.setAnimation("walk", 1);
         e.position = new Vector3(-200, -200, 0);
         engine.addEntity(e);
 
@@ -44,7 +44,7 @@ class Application
         var animatedSprite2D:AnimatedSprite2D = e.get(AnimatedSprite2D);
         var animationSet = Gengine.getResourceCache().getAnimationSet2D("spine/spineboy.json", true);
         animatedSprite2D.setAnimationSet(animationSet);
-        animatedSprite2D.setAnimation("walk");
+        animatedSprite2D.setAnimation("walk", 1);
         e.position = new Vector3(200, -200, 0);
         e.scale = new Vector3(0.5, 0.5, 1);
         engine.addEntity(e);

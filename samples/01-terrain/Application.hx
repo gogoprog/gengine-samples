@@ -2,6 +2,7 @@ import gengine.*;
 import gengine.components.*;
 import gengine.math.*;
 import gengine.graphics.*;
+import gengine.components.Light;
 
 class GameSystem extends System
 {
@@ -45,7 +46,9 @@ class GameSystem extends System
         light.setLightType(0);
         light.setCastShadows(true);
         light.setColor(new Color(0.7, 0.7, 0.7, 1));
-
+        light.setShadowBias(new BiasParameters(0.00025, 0.5, 0));
+        light.setShadowCascade(new CascadeParameters(10.0, 50.0, 200.0, 0.0, 0.8, 1.0));
+        light.setSpecularIntensity(0.5);
         lightEntity.add(light);
         lightEntity.setDirection(new Vector3(0.6, -1.0, 0.8));
 
@@ -55,7 +58,7 @@ class GameSystem extends System
         skyEntity.setScale(new Vector3(100,100,100));
         skyEntity.add(new Skybox());
         skyEntity.get(Skybox).setModel(Gengine.getResourceCache().getModel('Box.mdl', true));
-        skyEntity.get(Skybox).setMaterial(Gengine.getResourceCache().getMaterial('Skybox.xml', true));
+        skyEntity.get(Skybox).setMaterial1(Gengine.getResourceCache().getMaterial('Skybox.xml', true));
         engine.addEntity(skyEntity);
     }
 
