@@ -4,13 +4,16 @@ import gengine.math.*;
 import gengine.graphics.*;
 import gengine.components.Light;
 
-class GameSystem extends System
+class PlayerSystem extends System
 {
+    private var playerEntity:Entity;
     private var cameraEntity:Entity;
-    private var weaponEntity:Entity;
     private var terrainEntity:Entity;
+
     private var pitch:Float = 0.0;
     private var yaw:Float = 0.0;
+
+    private var weaponMove:Float = 0.0;
 
     public function new()
     {
@@ -19,11 +22,79 @@ class GameSystem extends System
 
     override public function addToEngine(engine:Engine):Void
     {
-        terrainEntity = new Entity();
+        playerEntity = cast engine.getEntityByName("player");
+        terrainEntity = cast engine.getEntityByName("terrain");
+    }
+
+    override public function update(dt:Float)
+    {
+        var direction = new Vector3(0, 0, 0);
+
+        if(Gengine.getInput().getMouseButtonDown(1))
+        {
+            var move = Gengine.getInput().getMouseMove();
+
+            pitch += move.y;
+            yaw += move.x;
+
+            playerEntity.setDirection(Vector3.FORWARD);
+
+            playerEntity.yaw(yaw);
+            playerEntity.pitch(pitch);
+        }
+
+        if(Gengine.getInput().getScancodeDown(26))
+        {
+            direction.z += 1;
+        }
+
+        if(Gengine.getInput().getScancodeDown(22))
+        {
+            direction.z -= 1;
+        }
+
+        if(Gengine.getInput().getScancodeDown(4))
+        {
+            direction.x -= 1;
+        }
+
+        if(Gengine.getInput().getScancodeDown(7))
+        {
+            direction.x += 1;
+        }
+
+        if(Maths.getVector3Length(direction) > 0)
+        {
+            var ndirection = Maths.getNormalizedVector3(direction);
+            playerEntity.translate(ndirection * 8.0 * dt);
+        }
+
+        var position = playerEntity.position;
+        var h = terrainEntity.get(Terrain).getHeight(position) + 1.0;
+        playerEntity.setPosition(new Vector3(position.x, h, position.z));
+        
+
+    }
+}
+
+class GameSystem extends System
+{
+    public function new()
+    {
+        super();
+    }
+
+    override public function addToEngine(engine:Engine):Void
+    {
+        var playerEntity = new Entity();
+        playerEntity.name = "player";
+        playerEntity.setPosition(new Vector3(0.0, 0.0, 0.0));
+        playerEntity.lookAt(new Vector3(0, 0.0, -1.0));
+
+        var terrainEntity = new Entity();
+        terrainEntity.name = "terrain";
         terrainEntity.add(new CollisionShape());
-
         terrainEntity.add(new Terrain());
-
         terrainEntity.get(Terrain).setPatchSize(64);
         terrainEntity.get(Terrain).setSpacing(new Vector3(1.0, 0.9, 1.0));
         terrainEntity.get(Terrain).setSmoothing(true);
@@ -32,20 +103,18 @@ class GameSystem extends System
         terrainEntity.get(Terrain).setMaterial(Gengine.getResourceCache().getMaterial('Terrain.xml', true));
         engine.addEntity(terrainEntity);
 
-        weaponEntity = new Entity();
+        var weaponEntity = new Entity();
         weaponEntity.add(new AnimatedModel());
         weaponEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel('Weapon.mdl', true));
         weaponEntity.get(AnimatedModel).setMaterial1(Gengine.getResourceCache().getMaterial('Materials/Weapon.xml', true));
         weaponEntity.get(AnimatedModel).setCastShadows(true);
         weaponEntity.scale = new Vector3(0.002, 0.002, 0.002);
-        engine.addEntity(weaponEntity);
 
-        cameraEntity = new Entity();
+        var cameraEntity = new Entity();
         cameraEntity.add(new Camera());
-        engine.addEntity(cameraEntity);
-        cameraEntity.setPosition(new Vector3(0.0, 10.0, 0.0));
-        cameraEntity.lookAt(new Vector3(0, 10.0, -1.0));
+        cameraEntity.setPosition(new Vector3(0.0, 1.0, 0.0));
         cameraEntity.get(Camera).setFov(50);
+        cameraEntity.parent = playerEntity;
 
         var viewport:Viewport = new Viewport(Gengine.getContext());
         viewport.setScene(Gengine.getScene());
@@ -72,62 +141,17 @@ class GameSystem extends System
         skyEntity.get(Skybox).setMaterial1(Gengine.getResourceCache().getMaterial('Skybox.xml', true));
         engine.addEntity(skyEntity);
 
-        weaponEntity.parent = cameraEntity;
+        weaponEntity.parent = playerEntity;
 
-        weaponEntity.position = new Vector3(0.15, -0.25, 0.35);
+        weaponEntity.position = new Vector3(0.15, 0.75, 0.35);
 
         cameraEntity.setDirection(Vector3.FORWARD);
+
+        engine.addEntity(playerEntity);
     }
 
     override public function update(dt:Float):Void
     {
-        var direction = new Vector3(0, 0, 0);
-
-        if(Gengine.getInput().getMouseButtonDown(1))
-        {
-            var move = Gengine.getInput().getMouseMove();
-
-            pitch += move.y;
-            yaw += move.x;
-
-            cameraEntity.setDirection(Vector3.FORWARD);
-
-            cameraEntity.yaw(yaw);
-            cameraEntity.pitch(pitch);
-        }
-
-        if(Gengine.getInput().getScancodeDown(26))
-        {
-            direction.z += 1;
-        }
-
-        if(Gengine.getInput().getScancodeDown(22))
-        {
-            direction.z -= 1;
-        }
-
-        if(Gengine.getInput().getScancodeDown(4))
-        {
-            direction.x -= 1;
-        }
-
-        if(Gengine.getInput().getScancodeDown(7))
-        {
-            direction.x += 1;
-        }
-
-        if(Maths.getVector3Length(direction) > 0)
-        {
-            var ndirection = Maths.getNormalizedVector3(direction);
-            cameraEntity.translate(ndirection * 8.0 * dt);
-        }
-
-        {
-            var position = cameraEntity.position;
-            var h = terrainEntity.get(Terrain).getHeight(position) + 1.0;
-            cameraEntity.setPosition(new Vector3(position.x, h, position.z));
-        }
-
         if(Gengine.getInput().getScancodePress(41))
         {
             Gengine.exit();
@@ -146,6 +170,7 @@ class Application
     public static function start(engine:Engine)
     {
         engine.addSystem(new GameSystem(), 2);
+        engine.addSystem(new PlayerSystem(), 3);
 
         Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.15, 0.15, 0.15, 1));
     }
