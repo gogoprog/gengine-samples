@@ -9,9 +9,11 @@ class PlayerSystem extends System
     private var playerEntity:Entity;
     private var cameraEntity:Entity;
     private var terrainEntity:Entity;
+    private var weaponEntity:Entity;
 
     private var pitch:Float = 0.0;
     private var yaw:Float = 0.0;
+    private var time:Float = 0.0;
 
     private var weaponMove:Float = 0.0;
 
@@ -24,11 +26,14 @@ class PlayerSystem extends System
     {
         playerEntity = cast engine.getEntityByName("player");
         terrainEntity = cast engine.getEntityByName("terrain");
+        cameraEntity = cast engine.getEntityByName("camera");
+        weaponEntity = cast engine.getEntityByName("weapon");
     }
 
     override public function update(dt:Float)
     {
         var direction = new Vector3(0, 0, 0);
+        time += dt;
 
         if(Gengine.getInput().getMouseButtonDown(1))
         {
@@ -67,13 +72,16 @@ class PlayerSystem extends System
         {
             var ndirection = Maths.getNormalizedVector3(direction);
             playerEntity.translate(ndirection * 8.0 * dt);
+            time += dt * 10;
         }
 
         var position = playerEntity.position;
         var h = terrainEntity.get(Terrain).getHeight(position) + 1.0;
         playerEntity.setPosition(new Vector3(position.x, h, position.z));
-        
 
+        weaponEntity.setDirection(Vector3.FORWARD * -1);
+        weaponEntity.pitch(0.7 * (Math.cos(time) - 0.5));
+        weaponEntity.yaw(0.7 * (Math.cos(time) - 0.5));
     }
 }
 
@@ -104,6 +112,7 @@ class GameSystem extends System
         engine.addEntity(terrainEntity);
 
         var weaponEntity = new Entity();
+        weaponEntity.name = "weapon";
         weaponEntity.add(new AnimatedModel());
         weaponEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel('Weapon.mdl', true));
         weaponEntity.get(AnimatedModel).setMaterial1(Gengine.getResourceCache().getMaterial('Materials/Weapon.xml', true));
@@ -111,6 +120,7 @@ class GameSystem extends System
         weaponEntity.scale = new Vector3(0.002, 0.002, 0.002);
 
         var cameraEntity = new Entity();
+        cameraEntity.name = "camera";
         cameraEntity.add(new Camera());
         cameraEntity.setPosition(new Vector3(0.0, 1.0, 0.0));
         cameraEntity.get(Camera).setFov(50);
