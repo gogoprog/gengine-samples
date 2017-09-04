@@ -1,5 +1,0 @@
--cp %GENGINE%/deps/common/Ash-Haxe/src/
--cp %GENGINE%/src/haxe/
--cp ..
--main gengine.Main
--js ./generated/main.js

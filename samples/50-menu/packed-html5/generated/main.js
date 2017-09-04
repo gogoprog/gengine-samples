@@ -30,10 +30,10 @@ GameSystem.prototype = $extend(ash_core_System.prototype,{
 		this.modelEntity.add(new gengine_components_AnimatedModel());
 		var tmp = this.modelEntity.get(gengine_components_AnimatedModel);
 		var tmp1 = gengine.getResourceCache().getModel("Ninja.mdl",true);
-		tmp.setModel(tmp1);
+		tmp.setModel1(tmp1,true);
 		var tmp2 = this.modelEntity.get(gengine_components_AnimatedModel);
 		var tmp3 = gengine.getResourceCache().getMaterial("Ninja.xml",true);
-		tmp2.setMaterial(tmp3);
+		tmp2.setMaterial1(tmp3);
 		var tmp4 = this.modelEntity;
 		var this1 = Module.Vector3(-0.7,0,-0.2);
 		tmp4.setPosition(this1);
@@ -46,7 +46,7 @@ GameSystem.prototype = $extend(ash_core_System.prototype,{
 	}
 	,update: function(dt) {
 		this.modelEntity.node.yaw(dt * 20,0);
-		var state = this.modelEntity.get(gengine_components_AnimatedModel).getAnimationStateByIndex(0);
+		var state = this.modelEntity.get(gengine_components_AnimatedModel).getAnimationState(0);
 		state.addTime(dt);
 		if(gengine.getInput().getScancodePress(41)) {
 			gengine.exit();
@@ -1335,15 +1335,15 @@ gengine_Entity.__name__ = ["gengine","Entity"];
 gengine_Entity.__super__ = ash_core_Entity;
 gengine_Entity.prototype = $extend(ash_core_Entity.prototype,{
 	add: function(component,componentClass) {
-		if(js_Boot.__instanceof(component,gengine_components_UrhoComponent)) {
-			this.node.addComponent((js_Boot.__cast(component , gengine_components_UrhoComponent)).object,0,0);
+		if(js_Boot.__instanceof(component,gengine_components_Component)) {
+			this.node.addComponent((js_Boot.__cast(component , gengine_components_Component)).object,0,0);
 		}
 		return ash_core_Entity.prototype.add.call(this,component,componentClass);
 	}
 	,remove: function(componentClass) {
 		var component = ash_core_Entity.prototype.remove.call(this,componentClass);
-		if(component != null && js_Boot.__instanceof(component,gengine_components_UrhoComponent)) {
-			this.node.removeComponent((js_Boot.__cast(component , gengine_components_UrhoComponent)).object);
+		if(component != null && js_Boot.__instanceof(component,gengine_components_Component)) {
+			this.node.removeComponent((js_Boot.__cast(component , gengine_components_Component)).object);
 		}
 		return component;
 	}
@@ -1472,6 +1472,18 @@ gengine_Entity.prototype = $extend(ash_core_Entity.prototype,{
 		}
 		this.node.lookAt(position,upVector,transformSpace);
 	}
+	,translate: function(delta,transformSpace) {
+		if(transformSpace == null) {
+			transformSpace = 0;
+		}
+		this.node.translate(delta,transformSpace);
+	}
+	,translate2D: function(delta,transformSpace) {
+		if(transformSpace == null) {
+			transformSpace = 0;
+		}
+		this.node.translate2D(delta,transformSpace);
+	}
 	,__class__: gengine_Entity
 });
 var gengine_Main = function() { };
@@ -1541,110 +1553,761 @@ gengine_Main.onPhysicsBeginContact2D = function(idA,idB) {
 		app.onPhysicsBeginContact2D(entityA, entityB);
 	}
 };
-var gengine_components_UrhoComponent = function() {
+var gengine_components_Component = function() {
 };
-gengine_components_UrhoComponent.__name__ = ["gengine","components","UrhoComponent"];
-gengine_components_UrhoComponent.prototype = {
-	__class__: gengine_components_UrhoComponent
+gengine_components_Component.__name__ = ["gengine","components","Component"];
+gengine_components_Component.prototype = {
+	__class__: gengine_components_Component
 };
+var gengine_components_Drawable = function() {
+	if(this.object == null) {
+		this.object = new Module.Drawable(gengine.getContext());
+		if('Drawable' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Component.call(this);
+};
+gengine_components_Drawable.__name__ = ["gengine","components","Drawable"];
+gengine_components_Drawable.__super__ = gengine_components_Component;
+gengine_components_Drawable.prototype = $extend(gengine_components_Component.prototype,{
+	getTypeName: function() {
+		return this.object.getTypeName();
+	}
+	,onSetEnabled: function() {
+		this.object.onSetEnabled();
+	}
+	,getNumOccluderTriangles: function() {
+		return this.object.getNumOccluderTriangles();
+	}
+	,setDrawDistance: function(distance) {
+		this.object.setDrawDistance(distance);
+	}
+	,setShadowDistance: function(distance) {
+		this.object.setShadowDistance(distance);
+	}
+	,setLodBias: function(bias) {
+		this.object.setLodBias(bias);
+	}
+	,setViewMask: function(mask) {
+		this.object.setViewMask(mask);
+	}
+	,setLightMask: function(mask) {
+		this.object.setLightMask(mask);
+	}
+	,setShadowMask: function(mask) {
+		this.object.setShadowMask(mask);
+	}
+	,setZoneMask: function(mask) {
+		this.object.setZoneMask(mask);
+	}
+	,setMaxLights: function(num) {
+		this.object.setMaxLights(num);
+	}
+	,setCastShadows: function(enable) {
+		this.object.setCastShadows(enable);
+	}
+	,setOccluder: function(enable) {
+		this.object.setOccluder(enable);
+	}
+	,setOccludee: function(enable) {
+		this.object.setOccludee(enable);
+	}
+	,markForUpdate: function() {
+		this.object.markForUpdate();
+	}
+	,getDrawableFlags: function() {
+		return this.object.getDrawableFlags();
+	}
+	,getDrawDistance: function() {
+		return this.object.getDrawDistance();
+	}
+	,getShadowDistance: function() {
+		return this.object.getShadowDistance();
+	}
+	,getLodBias: function() {
+		return this.object.getLodBias();
+	}
+	,getViewMask: function() {
+		return this.object.getViewMask();
+	}
+	,getLightMask: function() {
+		return this.object.getLightMask();
+	}
+	,getShadowMask: function() {
+		return this.object.getShadowMask();
+	}
+	,getZoneMask: function() {
+		return this.object.getZoneMask();
+	}
+	,getMaxLights: function() {
+		return this.object.getMaxLights();
+	}
+	,getCastShadows: function() {
+		return this.object.getCastShadows();
+	}
+	,isOccluder: function() {
+		return this.object.isOccluder();
+	}
+	,isOccludee: function() {
+		return this.object.isOccludee();
+	}
+	,isInView1: function() {
+		return this.object.isInView1();
+	}
+	,isInView: function(camera) {
+		return this.object.isInView(camera);
+	}
+	,setSortValue: function(value) {
+		this.object.setSortValue(value);
+	}
+	,setMinMaxZ: function(minZ,maxZ) {
+		this.object.setMinMaxZ(minZ,maxZ);
+	}
+	,markInView: function(frameNumber) {
+		this.object.markInView(frameNumber);
+	}
+	,limitLights: function() {
+		this.object.limitLights();
+	}
+	,limitVertexLights: function(removeConvertedLights) {
+		this.object.limitVertexLights(removeConvertedLights);
+	}
+	,setBasePass: function(batchIndex) {
+		this.object.setBasePass(batchIndex);
+	}
+	,isZoneDirty: function() {
+		return this.object.isZoneDirty();
+	}
+	,getDistance: function() {
+		return this.object.getDistance();
+	}
+	,getLodDistance: function() {
+		return this.object.getLodDistance();
+	}
+	,getSortValue: function() {
+		return this.object.getSortValue();
+	}
+	,hasBasePass: function(batchIndex) {
+		return this.object.hasBasePass(batchIndex);
+	}
+	,getFirstLight: function() {
+		return this.object.getFirstLight();
+	}
+	,getMinZ: function() {
+		return this.object.getMinZ();
+	}
+	,getMaxZ: function() {
+		return this.object.getMaxZ();
+	}
+	,addLight: function(light) {
+		this.object.addLight(light);
+	}
+	,addVertexLight: function(light) {
+		this.object.addVertexLight(light);
+	}
+	,__class__: gengine_components_Drawable
+});
+var gengine_components_StaticModel = function() {
+	if(this.object == null) {
+		this.object = new Module.StaticModel(gengine.getContext());
+		if('StaticModel' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Drawable.call(this);
+};
+gengine_components_StaticModel.__name__ = ["gengine","components","StaticModel"];
+gengine_components_StaticModel.__super__ = gengine_components_Drawable;
+gengine_components_StaticModel.prototype = $extend(gengine_components_Drawable.prototype,{
+	getTypeName1: function() {
+		return this.object.getTypeName1();
+	}
+	,getNumOccluderTriangles1: function() {
+		return this.object.getNumOccluderTriangles1();
+	}
+	,setModel: function(model) {
+		this.object.setModel(model);
+	}
+	,setMaterial1: function(material) {
+		this.object.setMaterial1(material);
+	}
+	,setMaterial: function(index,material) {
+		return this.object.setMaterial(index,material);
+	}
+	,setOcclusionLodLevel: function(level) {
+		this.object.setOcclusionLodLevel(level);
+	}
+	,applyMaterialList: function(fileName) {
+		this.object.applyMaterialList(fileName);
+	}
+	,getModel: function() {
+		return this.object.getModel();
+	}
+	,getNumGeometries: function() {
+		return this.object.getNumGeometries();
+	}
+	,getMaterial: function(index) {
+		return this.object.getMaterial(index);
+	}
+	,getOcclusionLodLevel: function() {
+		return this.object.getOcclusionLodLevel();
+	}
+	,isInside: function(point) {
+		return this.object.isInside(point);
+	}
+	,isInsideLocal: function(point) {
+		return this.object.isInsideLocal(point);
+	}
+	,__class__: gengine_components_StaticModel
+});
 var gengine_components_AnimatedModel = function() {
-	gengine_components_UrhoComponent.call(this);
-	this.object = new Module.AnimatedModel(gengine.getContext());
-	window.dummyNode.addComponent(this.object, 0, 0);
+	if(this.object == null) {
+		this.object = new Module.AnimatedModel(gengine.getContext());
+		if('AnimatedModel' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_StaticModel.call(this);
 };
 gengine_components_AnimatedModel.__name__ = ["gengine","components","AnimatedModel"];
-gengine_components_AnimatedModel.__super__ = gengine_components_UrhoComponent;
-gengine_components_AnimatedModel.prototype = $extend(gengine_components_UrhoComponent.prototype,{
-	setModel: function(model,createBones) {
-		if(createBones == null) {
-			createBones = true;
-		}
-		this.object.setModel(model,createBones);
+gengine_components_AnimatedModel.__super__ = gengine_components_StaticModel;
+gengine_components_AnimatedModel.prototype = $extend(gengine_components_StaticModel.prototype,{
+	getTypeName2: function() {
+		return this.object.getTypeName2();
 	}
-	,setMaterial: function(material) {
-		this.object.setMaterial(material);
+	,applyAttributes: function() {
+		this.object.applyAttributes();
+	}
+	,setModel1: function(model,createBones) {
+		this.object.setModel1(model,createBones);
 	}
 	,addAnimationState: function(animation) {
 		return this.object.addAnimationState(animation);
 	}
-	,getAnimationStateByIndex: function(index) {
-		return this.object.getAnimationStateByIndex(index);
+	,removeAnimationState1: function(animation) {
+		this.object.removeAnimationState1(animation);
 	}
-	,setCastShadows: function(castShadows) {
-		this.object.setCastShadows(castShadows);
+	,removeAnimationState2: function(animationName) {
+		this.object.removeAnimationState2(animationName);
+	}
+	,removeAnimationState3: function(state) {
+		this.object.removeAnimationState3(state);
+	}
+	,removeAnimationState: function(index) {
+		this.object.removeAnimationState(index);
+	}
+	,removeAllAnimationStates: function() {
+		this.object.removeAllAnimationStates();
+	}
+	,setAnimationLodBias: function(bias) {
+		this.object.setAnimationLodBias(bias);
+	}
+	,setUpdateInvisible: function(enable) {
+		this.object.setUpdateInvisible(enable);
+	}
+	,setMorphWeight1: function(index,weight) {
+		this.object.setMorphWeight1(index,weight);
+	}
+	,setMorphWeight: function(name,weight) {
+		this.object.setMorphWeight(name,weight);
+	}
+	,resetMorphWeights: function() {
+		this.object.resetMorphWeights();
+	}
+	,applyAnimation: function() {
+		this.object.applyAnimation();
+	}
+	,getSkeleton: function() {
+		return this.object.getSkeleton();
+	}
+	,getNumAnimationStates: function() {
+		return this.object.getNumAnimationStates();
+	}
+	,getAnimationState1: function(animation) {
+		return this.object.getAnimationState1(animation);
+	}
+	,getAnimationState2: function(animationName) {
+		return this.object.getAnimationState2(animationName);
+	}
+	,getAnimationState: function(index) {
+		return this.object.getAnimationState(index);
+	}
+	,getAnimationLodBias: function() {
+		return this.object.getAnimationLodBias();
+	}
+	,getUpdateInvisible: function() {
+		return this.object.getUpdateInvisible();
+	}
+	,getNumMorphs: function() {
+		return this.object.getNumMorphs();
+	}
+	,getMorphWeight1: function(index) {
+		return this.object.getMorphWeight1(index);
+	}
+	,getMorphWeight: function(name) {
+		return this.object.getMorphWeight(name);
+	}
+	,isMaster: function() {
+		return this.object.isMaster();
+	}
+	,updateBoneBoundingBox: function() {
+		this.object.updateBoneBoundingBox();
 	}
 	,__class__: gengine_components_AnimatedModel
 });
 var gengine_components_Camera = function() {
-	gengine_components_UrhoComponent.call(this);
-	this.object = new Module.Camera(gengine.getContext());
-	window.dummyNode.addComponent(this.object, 0, 0);
+	if(this.object == null) {
+		this.object = new Module.Camera(gengine.getContext());
+		if('Camera' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Component.call(this);
 };
 gengine_components_Camera.__name__ = ["gengine","components","Camera"];
-gengine_components_Camera.__super__ = gengine_components_UrhoComponent;
-gengine_components_Camera.prototype = $extend(gengine_components_UrhoComponent.prototype,{
-	setOrthoSize: function(size) {
-		this.object.setOrthoSize(size);
+gengine_components_Camera.__super__ = gengine_components_Component;
+gengine_components_Camera.prototype = $extend(gengine_components_Component.prototype,{
+	getTypeName: function() {
+		return this.object.getTypeName();
 	}
-	,setOrthographic: function(orthographic) {
-		this.object.setOrthographic(orthographic);
+	,setNearClip: function(nearClip) {
+		this.object.setNearClip(nearClip);
 	}
-	,setNearClip: function(distance) {
-		this.object.setNearClip(distance);
-	}
-	,setFarClip: function(distance) {
-		this.object.setFarClip(distance);
+	,setFarClip: function(farClip) {
+		this.object.setFarClip(farClip);
 	}
 	,setFov: function(fov) {
 		this.object.setFov(fov);
 	}
-	,setAspectRatio: function(ratio) {
-		this.object.setAspectRatio(ratio);
+	,setOrthoSize1: function(orthoSize) {
+		this.object.setOrthoSize1(orthoSize);
 	}
-	,setAutoAspectRatio: function(autoAspectRatio) {
-		this.object.setAutoAspectRatio(autoAspectRatio);
+	,setOrthoSize: function(orthoSize) {
+		this.object.setOrthoSize(orthoSize);
+	}
+	,setAspectRatio: function(aspectRatio) {
+		this.object.setAspectRatio(aspectRatio);
+	}
+	,setFillMode: function(mode) {
+		this.object.setFillMode(mode);
 	}
 	,setZoom: function(zoom) {
 		this.object.setZoom(zoom);
 	}
+	,setLodBias: function(bias) {
+		this.object.setLodBias(bias);
+	}
+	,setViewMask: function(mask) {
+		this.object.setViewMask(mask);
+	}
+	,setViewOverrideFlags: function(flags) {
+		this.object.setViewOverrideFlags(flags);
+	}
+	,setOrthographic: function(enable) {
+		this.object.setOrthographic(enable);
+	}
+	,setAutoAspectRatio: function(enable) {
+		this.object.setAutoAspectRatio(enable);
+	}
+	,setProjectionOffset: function(offset) {
+		this.object.setProjectionOffset(offset);
+	}
+	,setUseReflection: function(enable) {
+		this.object.setUseReflection(enable);
+	}
+	,setUseClipping: function(enable) {
+		this.object.setUseClipping(enable);
+	}
+	,setFlipVertical: function(enable) {
+		this.object.setFlipVertical(enable);
+	}
+	,getFarClip: function() {
+		return this.object.getFarClip();
+	}
+	,getNearClip: function() {
+		return this.object.getNearClip();
+	}
+	,getFov: function() {
+		return this.object.getFov();
+	}
+	,getOrthoSize: function() {
+		return this.object.getOrthoSize();
+	}
+	,getAspectRatio: function() {
+		return this.object.getAspectRatio();
+	}
 	,getZoom: function() {
 		return this.object.getZoom();
 	}
-	,worldToScreenPoint: function(worldPoint) {
-		return this.object.worldToScreenPoint(worldPoint);
+	,getLodBias: function() {
+		return this.object.getLodBias();
 	}
-	,screenToWorldPoint: function(screenPoint) {
-		return this.object.screenToWorldPoint(screenPoint);
+	,getViewMask: function() {
+		return this.object.getViewMask();
+	}
+	,getViewOverrideFlags: function() {
+		return this.object.getViewOverrideFlags();
+	}
+	,getFillMode: function() {
+		return this.object.getFillMode();
+	}
+	,isOrthographic: function() {
+		return this.object.isOrthographic();
+	}
+	,getAutoAspectRatio: function() {
+		return this.object.getAutoAspectRatio();
+	}
+	,getFrustumSize: function(near,far) {
+		this.object.getFrustumSize(near,far);
+	}
+	,getHalfViewSize: function() {
+		return this.object.getHalfViewSize();
+	}
+	,worldToScreenPoint: function(worldPos) {
+		return this.object.worldToScreenPoint(worldPos);
+	}
+	,screenToWorldPoint: function(screenPos) {
+		return this.object.screenToWorldPoint(screenPos);
+	}
+	,getProjectionOffset: function() {
+		return this.object.getProjectionOffset();
+	}
+	,getUseReflection: function() {
+		return this.object.getUseReflection();
+	}
+	,getUseClipping: function() {
+		return this.object.getUseClipping();
+	}
+	,getFlipVertical: function() {
+		return this.object.getFlipVertical();
+	}
+	,getReverseCulling: function() {
+		return this.object.getReverseCulling();
+	}
+	,getDistance: function(worldPos) {
+		return this.object.getDistance(worldPos);
+	}
+	,getDistanceSquared: function(worldPos) {
+		return this.object.getDistanceSquared(worldPos);
+	}
+	,getLodDistance: function(distance,scale,bias) {
+		return this.object.getLodDistance(distance,scale,bias);
+	}
+	,getFaceCameraRotation: function(position,rotation,mode,minAngle) {
+		return this.object.getFaceCameraRotation(position,rotation,mode,minAngle);
+	}
+	,isProjectionValid: function() {
+		return this.object.isProjectionValid();
+	}
+	,setAspectRatioInternal: function(aspectRatio) {
+		this.object.setAspectRatioInternal(aspectRatio);
+	}
+	,setOrthoSizeAttr: function(orthoSize) {
+		this.object.setOrthoSizeAttr(orthoSize);
 	}
 	,__class__: gengine_components_Camera
 });
+var gengine_components_CollisionShape2D = function() {
+	if(this.object == null) {
+		this.object = new Module.CollisionShape2D(gengine.getContext());
+		if('CollisionShape2D' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Component.call(this);
+};
+gengine_components_CollisionShape2D.__name__ = ["gengine","components","CollisionShape2D"];
+gengine_components_CollisionShape2D.__super__ = gengine_components_Component;
+gengine_components_CollisionShape2D.prototype = $extend(gengine_components_Component.prototype,{
+	getTypeName: function() {
+		return this.object.getTypeName();
+	}
+	,onSetEnabled: function() {
+		this.object.onSetEnabled();
+	}
+	,setTrigger: function(trigger) {
+		this.object.setTrigger(trigger);
+	}
+	,setCategoryBits: function(categoryBits) {
+		this.object.setCategoryBits(categoryBits);
+	}
+	,setMaskBits: function(maskBits) {
+		this.object.setMaskBits(maskBits);
+	}
+	,setGroupIndex: function(groupIndex) {
+		this.object.setGroupIndex(groupIndex);
+	}
+	,setDensity: function(density) {
+		this.object.setDensity(density);
+	}
+	,setFriction: function(friction) {
+		this.object.setFriction(friction);
+	}
+	,setRestitution: function(restitution) {
+		this.object.setRestitution(restitution);
+	}
+	,createFixture: function() {
+		this.object.createFixture();
+	}
+	,releaseFixture: function() {
+		this.object.releaseFixture();
+	}
+	,isTrigger: function() {
+		return this.object.isTrigger();
+	}
+	,getCategoryBits: function() {
+		return this.object.getCategoryBits();
+	}
+	,getMaskBits: function() {
+		return this.object.getMaskBits();
+	}
+	,getGroupIndex: function() {
+		return this.object.getGroupIndex();
+	}
+	,getDensity: function() {
+		return this.object.getDensity();
+	}
+	,getFriction: function() {
+		return this.object.getFriction();
+	}
+	,getRestitution: function() {
+		return this.object.getRestitution();
+	}
+	,getMass: function() {
+		return this.object.getMass();
+	}
+	,getInertia: function() {
+		return this.object.getInertia();
+	}
+	,getMassCenter: function() {
+		return this.object.getMassCenter();
+	}
+	,__class__: gengine_components_CollisionShape2D
+});
+var gengine_components_Constraint2D = function() {
+	if(this.object == null) {
+		this.object = new Module.Constraint2D(gengine.getContext());
+		if('Constraint2D' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Component.call(this);
+};
+gengine_components_Constraint2D.__name__ = ["gengine","components","Constraint2D"];
+gengine_components_Constraint2D.__super__ = gengine_components_Component;
+gengine_components_Constraint2D.prototype = $extend(gengine_components_Component.prototype,{
+	getTypeName: function() {
+		return this.object.getTypeName();
+	}
+	,applyAttributes: function() {
+		this.object.applyAttributes();
+	}
+	,onSetEnabled: function() {
+		this.object.onSetEnabled();
+	}
+	,createJoint: function() {
+		this.object.createJoint();
+	}
+	,releaseJoint: function() {
+		this.object.releaseJoint();
+	}
+	,setOtherBody: function(body) {
+		this.object.setOtherBody(body);
+	}
+	,setCollideConnected: function(collideConnected) {
+		this.object.setCollideConnected(collideConnected);
+	}
+	,setAttachedConstraint: function(constraint) {
+		this.object.setAttachedConstraint(constraint);
+	}
+	,getOwnerBody: function() {
+		return this.object.getOwnerBody();
+	}
+	,getOtherBody: function() {
+		return this.object.getOtherBody();
+	}
+	,getCollideConnected: function() {
+		return this.object.getCollideConnected();
+	}
+	,getAttachedConstraint: function() {
+		return this.object.getAttachedConstraint();
+	}
+	,__class__: gengine_components_Constraint2D
+});
 var gengine_components_Light = function() {
-	gengine_components_UrhoComponent.call(this);
-	this.object = new Module.Light(gengine.getContext());
-	window.dummyNode.addComponent(this.object, 0, 0);
+	if(this.object == null) {
+		this.object = new Module.Light(gengine.getContext());
+		if('Light' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Drawable.call(this);
 };
 gengine_components_Light.__name__ = ["gengine","components","Light"];
-gengine_components_Light.__super__ = gengine_components_UrhoComponent;
-gengine_components_Light.prototype = $extend(gengine_components_UrhoComponent.prototype,{
-	setLightType: function(type) {
+gengine_components_Light.__super__ = gengine_components_Drawable;
+gengine_components_Light.prototype = $extend(gengine_components_Drawable.prototype,{
+	getTypeName1: function() {
+		return this.object.getTypeName1();
+	}
+	,setLightType: function(type) {
 		this.object.setLightType(type);
+	}
+	,setPerVertex: function(enable) {
+		this.object.setPerVertex(enable);
 	}
 	,setColor: function(color) {
 		this.object.setColor(color);
 	}
-	,setCastShadows: function(castShadows) {
-		this.object.setCastShadows(castShadows);
+	,setTemperature: function(temperature) {
+		this.object.setTemperature(temperature);
+	}
+	,setRadius: function(radius) {
+		this.object.setRadius(radius);
+	}
+	,setLength: function(length) {
+		this.object.setLength(length);
+	}
+	,setUsePhysicalValues: function(enable) {
+		this.object.setUsePhysicalValues(enable);
+	}
+	,setSpecularIntensity: function(intensity) {
+		this.object.setSpecularIntensity(intensity);
+	}
+	,setBrightness: function(brightness) {
+		this.object.setBrightness(brightness);
+	}
+	,setRange: function(range) {
+		this.object.setRange(range);
+	}
+	,setFov: function(fov) {
+		this.object.setFov(fov);
+	}
+	,setAspectRatio: function(aspectRatio) {
+		this.object.setAspectRatio(aspectRatio);
+	}
+	,setFadeDistance: function(distance) {
+		this.object.setFadeDistance(distance);
+	}
+	,setShadowFadeDistance: function(distance) {
+		this.object.setShadowFadeDistance(distance);
+	}
+	,setShadowBias: function(parameters) {
+		this.object.setShadowBias(parameters);
+	}
+	,setShadowCascade: function(parameters) {
+		this.object.setShadowCascade(parameters);
+	}
+	,setShadowIntensity: function(intensity) {
+		this.object.setShadowIntensity(intensity);
+	}
+	,setShadowResolution: function(resolution) {
+		this.object.setShadowResolution(resolution);
+	}
+	,setShadowNearFarRatio: function(nearFarRatio) {
+		this.object.setShadowNearFarRatio(nearFarRatio);
+	}
+	,setShadowMaxExtrusion: function(extrusion) {
+		this.object.setShadowMaxExtrusion(extrusion);
+	}
+	,setRampTexture: function(texture) {
+		this.object.setRampTexture(texture);
+	}
+	,setShapeTexture: function(texture) {
+		this.object.setShapeTexture(texture);
+	}
+	,getLightType: function() {
+		return this.object.getLightType();
+	}
+	,getPerVertex: function() {
+		return this.object.getPerVertex();
+	}
+	,getColor: function() {
+		return this.object.getColor();
+	}
+	,getTemperature: function() {
+		return this.object.getTemperature();
+	}
+	,getRadius: function() {
+		return this.object.getRadius();
+	}
+	,getLength: function() {
+		return this.object.getLength();
+	}
+	,getUsePhysicalValues: function() {
+		return this.object.getUsePhysicalValues();
+	}
+	,getColorFromTemperature: function() {
+		return this.object.getColorFromTemperature();
+	}
+	,getSpecularIntensity: function() {
+		return this.object.getSpecularIntensity();
+	}
+	,getBrightness: function() {
+		return this.object.getBrightness();
+	}
+	,getEffectiveColor: function() {
+		return this.object.getEffectiveColor();
+	}
+	,getEffectiveSpecularIntensity: function() {
+		return this.object.getEffectiveSpecularIntensity();
+	}
+	,getRange: function() {
+		return this.object.getRange();
+	}
+	,getFov: function() {
+		return this.object.getFov();
+	}
+	,getAspectRatio: function() {
+		return this.object.getAspectRatio();
+	}
+	,getFadeDistance: function() {
+		return this.object.getFadeDistance();
+	}
+	,getShadowFadeDistance: function() {
+		return this.object.getShadowFadeDistance();
+	}
+	,getShadowBias: function() {
+		return this.object.getShadowBias();
+	}
+	,getShadowCascade: function() {
+		return this.object.getShadowCascade();
+	}
+	,getShadowIntensity: function() {
+		return this.object.getShadowIntensity();
+	}
+	,getShadowResolution: function() {
+		return this.object.getShadowResolution();
+	}
+	,getShadowNearFarRatio: function() {
+		return this.object.getShadowNearFarRatio();
+	}
+	,getShadowMaxExtrusion: function() {
+		return this.object.getShadowMaxExtrusion();
+	}
+	,getRampTexture: function() {
+		return this.object.getRampTexture();
+	}
+	,getShapeTexture: function() {
+		return this.object.getShapeTexture();
+	}
+	,getNumShadowSplits: function() {
+		return this.object.getNumShadowSplits();
+	}
+	,isNegative: function() {
+		return this.object.isNegative();
+	}
+	,setIntensitySortValue: function(distance) {
+		this.object.setIntensitySortValue(distance);
+	}
+	,getIntensityDivisor: function(attenuation) {
+		return this.object.getIntensityDivisor(attenuation);
 	}
 	,__class__: gengine_components_Light
 });
 var gengine_components_RigidBody2D = function() {
-	gengine_components_UrhoComponent.call(this);
-	this.object = new Module.RigidBody2D(gengine.getContext());
+	if(this.object == null) {
+		this.object = new Module.RigidBody2D(gengine.getContext());
+		if('RigidBody2D' == 'ParticleEmitter2D') { window.dummyNode.addComponent(this.object, 0, 0); }
+	}
+	gengine_components_Component.call(this);
 };
 gengine_components_RigidBody2D.__name__ = ["gengine","components","RigidBody2D"];
-gengine_components_RigidBody2D.__super__ = gengine_components_UrhoComponent;
-gengine_components_RigidBody2D.prototype = $extend(gengine_components_UrhoComponent.prototype,{
-	setBodyType: function(bodyType) {
+gengine_components_RigidBody2D.__super__ = gengine_components_Component;
+gengine_components_RigidBody2D.prototype = $extend(gengine_components_Component.prototype,{
+	getTypeName: function() {
+		return this.object.getTypeName();
+	}
+	,onSetEnabled: function() {
+		this.object.onSetEnabled();
+	}
+	,setBodyType: function(bodyType) {
 		this.object.setBodyType(bodyType);
 	}
 	,setMass: function(mass) {
@@ -1656,11 +2319,17 @@ gengine_components_RigidBody2D.prototype = $extend(gengine_components_UrhoCompon
 	,setMassCenter: function(center) {
 		this.object.setMassCenter(center);
 	}
+	,setUseFixtureMass: function(useFixtureMass) {
+		this.object.setUseFixtureMass(useFixtureMass);
+	}
 	,setLinearDamping: function(linearDamping) {
 		this.object.setLinearDamping(linearDamping);
 	}
 	,setAngularDamping: function(angularDamping) {
 		this.object.setAngularDamping(angularDamping);
+	}
+	,setAllowSleep: function(allowSleep) {
+		this.object.setAllowSleep(allowSleep);
 	}
 	,setFixedRotation: function(fixedRotation) {
 		this.object.setFixedRotation(fixedRotation);
@@ -1670,6 +2339,9 @@ gengine_components_RigidBody2D.prototype = $extend(gengine_components_UrhoCompon
 	}
 	,setGravityScale: function(gravityScale) {
 		this.object.setGravityScale(gravityScale);
+	}
+	,setAwake: function(awake) {
+		this.object.setAwake(awake);
 	}
 	,setLinearVelocity: function(linearVelocity) {
 		this.object.setLinearVelocity(linearVelocity);
@@ -1689,11 +2361,86 @@ gengine_components_RigidBody2D.prototype = $extend(gengine_components_UrhoCompon
 	,applyLinearImpulse: function(impulse,point,wake) {
 		this.object.applyLinearImpulse(impulse,point,wake);
 	}
+	,applyLinearImpulseToCenter: function(impulse,wake) {
+		this.object.applyLinearImpulseToCenter(impulse,wake);
+	}
 	,applyAngularImpulse: function(impulse,wake) {
 		this.object.applyAngularImpulse(impulse,wake);
 	}
+	,createBody: function() {
+		this.object.createBody();
+	}
+	,releaseBody: function() {
+		this.object.releaseBody();
+	}
+	,applyWorldTransform1: function() {
+		this.object.applyWorldTransform1();
+	}
+	,applyWorldTransform: function(newWorldPosition,newWorldRotation) {
+		this.object.applyWorldTransform(newWorldPosition,newWorldRotation);
+	}
+	,addCollisionShape2D: function(collisionShape) {
+		this.object.addCollisionShape2D(collisionShape);
+	}
+	,removeCollisionShape2D: function(collisionShape) {
+		this.object.removeCollisionShape2D(collisionShape);
+	}
+	,addConstraint2D: function(constraint) {
+		this.object.addConstraint2D(constraint);
+	}
+	,removeConstraint2D: function(constraint) {
+		this.object.removeConstraint2D(constraint);
+	}
+	,getBodyType: function() {
+		return this.object.getBodyType();
+	}
+	,getMass: function() {
+		return this.object.getMass();
+	}
+	,getInertia: function() {
+		return this.object.getInertia();
+	}
+	,getMassCenter: function() {
+		return this.object.getMassCenter();
+	}
+	,getUseFixtureMass: function() {
+		return this.object.getUseFixtureMass();
+	}
+	,getLinearDamping: function() {
+		return this.object.getLinearDamping();
+	}
+	,getAngularDamping: function() {
+		return this.object.getAngularDamping();
+	}
+	,isAllowSleep: function() {
+		return this.object.isAllowSleep();
+	}
+	,isFixedRotation: function() {
+		return this.object.isFixedRotation();
+	}
+	,isBullet: function() {
+		return this.object.isBullet();
+	}
+	,getGravityScale: function() {
+		return this.object.getGravityScale();
+	}
+	,isAwake: function() {
+		return this.object.isAwake();
+	}
+	,getLinearVelocity: function() {
+		return this.object.getLinearVelocity();
+	}
+	,getAngularVelocity: function() {
+		return this.object.getAngularVelocity();
+	}
 	,__class__: gengine_components_RigidBody2D
 });
+var gengine_math__$Quaternion_Quaternion_$Impl_$ = {};
+gengine_math__$Quaternion_Quaternion_$Impl_$.__name__ = ["gengine","math","_Quaternion","Quaternion_Impl_"];
+gengine_math__$Quaternion_Quaternion_$Impl_$._new = function(w,x,y,z) {
+	var this1 = Module.Quaternion(w,x,y,z);
+	return this1;
+};
 var gengine_math__$Vector2_Vector2_$Impl_$ = {};
 gengine_math__$Vector2_Vector2_$Impl_$.__name__ = ["gengine","math","_Vector2","Vector2_Impl_"];
 gengine_math__$Vector2_Vector2_$Impl_$._new = function(x,y) {
@@ -2157,6 +2904,96 @@ var Class = { __name__ : ["Class"]};
 var Enum = { };
 var __map_reserved = {}
 ash_core_Entity.nameCount = 0;
+gengine_math__$Quaternion_Quaternion_$Impl_$.IDENTITY = (function($this) {
+	var $r;
+	var this1 = Module.Quaternion(1.0,0.0,0.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector2_Vector2_$Impl_$.ZERO = (function($this) {
+	var $r;
+	var this1 = Module.Vector2(0,0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector2_Vector2_$Impl_$.LEFT = (function($this) {
+	var $r;
+	var this1 = Module.Vector2(-1.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector2_Vector2_$Impl_$.RIGHT = (function($this) {
+	var $r;
+	var this1 = Module.Vector2(1.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector2_Vector2_$Impl_$.UP = (function($this) {
+	var $r;
+	var this1 = Module.Vector2(0.0,1.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector2_Vector2_$Impl_$.DOWN = (function($this) {
+	var $r;
+	var this1 = Module.Vector2(0.0,-1.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector2_Vector2_$Impl_$.ONE = (function($this) {
+	var $r;
+	var this1 = Module.Vector2(1.0,1.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.ZERO = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(0,0,0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.LEFT = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(-1.0,0.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.RIGHT = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(1.0,0.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.UP = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(0.0,1.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.DOWN = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(0.0,-1.0,0.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.FORWARD = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(0.0,0.0,1.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.BACK = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(0.0,0.0,-1.0);
+	$r = this1;
+	return $r;
+}(this));
+gengine_math__$Vector3_Vector3_$Impl_$.ONE = (function($this) {
+	var $r;
+	var this1 = Module.Vector3(1.0,1.0,1.0);
+	$r = this1;
+	return $r;
+}(this));
 gengine_systems_Physics2DSystem.urhoBodyToEntity = new haxe_ds_IntMap();
 haxe_ds_ObjectMap.count = 0;
 js_Boot.__toStr = ({ }).toString;

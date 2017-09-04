@@ -1,0 +1,8 @@
+<material>
+    <technique name="Techniques/Diff.xml" />
+	<texture unit="diffuse" name="Textures/gun_diffuse.png" />
+    <parameter name="MatSpecColor" value="0 0 0 1" />
+    <parameter name="MatDiffColor" value="1.0 1.0 1.0 1" />
+	<parameter name="MatSpecColor" value="1.0 1.0 1.0 50" />
+	<parameter name="MatEmissiveColor" value="0 0 0 1" />
+</material>
