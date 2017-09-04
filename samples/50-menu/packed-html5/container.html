@@ -17,8 +17,8 @@
 
             pre
                 .dialog({
-                    width: '50%',
-                    height: wHeight * 0.6,
+                    width: '410px',
+                    height: wHeight,
                     position: { my: "right bottom", at: "right bottom", of: window },
                     title: "Source: Application.hx"
                 })
@@ -69,8 +69,8 @@ class GameSystem extends System
     {
         modelEntity = new Entity();
         modelEntity.add(new AnimatedModel());
-        modelEntity.get(AnimatedModel).setModel(Gengine.getResourceCache().getModel(&#x27;Ninja.mdl&#x27;, true));
-        modelEntity.get(AnimatedModel).setMaterial(Gengine.getResourceCache().getMaterial(&#x27;Ninja.xml&#x27;, true));
+        modelEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel(&#x27;Ninja.mdl&#x27;, true), true);
+        modelEntity.get(AnimatedModel).setMaterial1(Gengine.getResourceCache().getMaterial(&#x27;Ninja.xml&#x27;, true));
         modelEntity.setPosition(new Vector3(-0.7, 0, -0.2));
         engine.addEntity(modelEntity);
 
@@ -85,7 +85,7 @@ class GameSystem extends System
     {
         modelEntity.yaw(dt * 20);
 
-        var state:AnimationState = modelEntity.get(AnimatedModel).getAnimationStateByIndex(0);
+        var state:AnimationState = modelEntity.get(AnimatedModel).getAnimationState(0);
         state.addTime(dt);
 
         if(Gengine.getInput().getScancodePress(41))

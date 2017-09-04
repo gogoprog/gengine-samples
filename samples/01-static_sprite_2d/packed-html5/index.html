@@ -239,10 +239,10 @@
             } else if (Module['memoryInitializerPrefixURL']) {
               memoryInitializer = Module['memoryInitializerPrefixURL'] + memoryInitializer;
             }
-            var xhr = Module['memoryInitializerRequest'] = new XMLHttpRequest();
-            xhr.open('GET', memoryInitializer, true);
-            xhr.responseType = 'arraybuffer';
-            xhr.send(null);
+            var meminitXHR = Module['memoryInitializerRequest'] = new XMLHttpRequest();
+            meminitXHR.open('GET', memoryInitializer, true);
+            meminitXHR.responseType = 'arraybuffer';
+            meminitXHR.send(null);
           })();
 
           var script = document.createElement('script');
