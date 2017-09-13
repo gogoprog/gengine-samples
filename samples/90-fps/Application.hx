@@ -114,7 +114,7 @@ class GameSystem extends System
         var weaponEntity = new Entity();
         weaponEntity.name = "weapon";
         weaponEntity.add(new AnimatedModel());
-        weaponEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel('Weapon.mdl', true));
+        weaponEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel('Weapon.mdl', true), false);
         weaponEntity.get(AnimatedModel).setMaterial1(Gengine.getResourceCache().getMaterial('Materials/Weapon.xml', true));
         weaponEntity.get(AnimatedModel).setCastShadows(true);
         weaponEntity.scale = new Vector3(0.002, 0.002, 0.002);
