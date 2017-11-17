@@ -54,6 +54,7 @@ class Application
     public static function start(engine:Engine)
     {
         engine.addSystem(new GameSystem(), 2);
+        engine.addSystem(new ScreenshotSystem(), 0);
 
         var cameraEntity = new Entity();
         cameraEntity.add(new Camera());

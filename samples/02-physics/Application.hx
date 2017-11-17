@@ -96,6 +96,7 @@ class Application
         cameraEntity.get(Camera).setOrthographic(true);
         engine.addEntity(cameraEntity);
 
+        engine.addSystem(new ScreenshotSystem(), 0);
         engine.addSystem(new InputSystem(cameraEntity.get(Camera)), 0);
         engine.addSystem(new FactorySystem(), 0);
 
