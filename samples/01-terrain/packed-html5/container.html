@@ -145,6 +145,7 @@ class Application
     public static function start(engine:Engine)
     {
         engine.addSystem(new GameSystem(), 2);
+        engine.addSystem(new ScreenshotSystem(), 0);
 
         Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.15, 0.15, 0.15, 1));
     }
