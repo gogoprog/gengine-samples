@@ -181,6 +181,7 @@ class Application
     {
         engine.addSystem(new GameSystem(), 2);
         engine.addSystem(new PlayerSystem(), 3);
+        engine.addSystem(new ScreenshotSystem(), 0);
 
         Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.15, 0.15, 0.15, 1));
     }

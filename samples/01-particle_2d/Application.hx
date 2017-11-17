@@ -29,6 +29,7 @@ class Application
     public static function start(engine:Engine)
     {
         engine.addSystem(new ExitSystem(), 0);
+        engine.addSystem(new ScreenshotSystem(), 0);
 
         var e = new Entity();
         e.add(new ParticleEmitter2D());
