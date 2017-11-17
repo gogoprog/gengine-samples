@@ -100,6 +100,7 @@ class Application
     public static function start(engine:Engine)
     {
         engine.addSystem(new MainSystem(), 0);
+        engine.addSystem(new ScreenshotSystem(), 0);
 
         Gengine.getRenderer().getDefaultZone().setFogColor(new Color(0.5, 0.5, 0.5, 1));
     }

@@ -167,7 +167,7 @@ class GameSystem extends System
         var weaponEntity = new Entity();
         weaponEntity.name = &quot;weapon&quot;;
         weaponEntity.add(new AnimatedModel());
-        weaponEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel(&#x27;Weapon.mdl&#x27;, true));
+        weaponEntity.get(AnimatedModel).setModel1(Gengine.getResourceCache().getModel(&#x27;Weapon.mdl&#x27;, true), false);
         weaponEntity.get(AnimatedModel).setMaterial1(Gengine.getResourceCache().getMaterial(&#x27;Materials/Weapon.xml&#x27;, true));
         weaponEntity.get(AnimatedModel).setCastShadows(true);
         weaponEntity.scale = new Vector3(0.002, 0.002, 0.002);
@@ -234,6 +234,7 @@ class Application
     {
         engine.addSystem(new GameSystem(), 2);
         engine.addSystem(new PlayerSystem(), 3);
+        engine.addSystem(new ScreenshotSystem(), 0);
 
         Gengine.getRenderer().getDefaultZone().setAmbientColor(new Color(0.15, 0.15, 0.15, 1));
     }

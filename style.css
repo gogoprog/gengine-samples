@@ -1,19 +1,33 @@
 body {
-    font-family: 'Vollkorn', serif;
-    color: #46433A;
-    background-color: #F1EED9;
+  font-family: 'Vollkorn', serif;
+  color: #46433A;
+  background-color: #F1EED9;
+}
+
+a {
+    display:inline-block;
+    border: 1px solid black;
+    text-align:center;
+    margin:5px 5px;
 }
 
 a:link,
 a:visited,
 a:hover,
 a:active {
-    color: #CE534D;
-    text-decoration: none;
-    display:inline-block;
-    margin-left:15px;
+  color: #CE534D;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 15px;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+  border-color:white;
+}
+
+img {
+    display:block;
+    width: 320px;
+    height: 240px;
 }

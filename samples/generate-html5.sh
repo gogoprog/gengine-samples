@@ -14,12 +14,13 @@ HTML="<html>
 for dir in `ls`;
 do
     test -d "$dir" || continue
+    test -e "$dir/build.hxml" || continue
     cd $dir
     echo "[gengine-samples] Generating HTML5 for <$dir> ..."
-    gengine-pack --html5 $1
+    [ "$1" == "--skip-build" ] || gengine-pack --html5 $1
     cd ..
 
-    HTML="${HTML}<a href='./samples/${dir}/packed-html5/container.html'>${dir}</a><br/>"
+    HTML="${HTML}<a href='./samples/${dir}/packed-html5/container.html'><img src='./samples/${dir}/screenshot.png'/>${dir}</a>"
 
     python << EOF
 import pystache
